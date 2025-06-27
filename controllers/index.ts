@@ -50,7 +50,7 @@ export const textToSpeechWithEdge = expressAsyncHandler(
       "Content-Length": Buffer.byteLength(audio, "base64"),
     });
     const buffer = Buffer.from(audio, "base64");
-    res.end(buffer);
+    res.send(buffer);
   }
 );
 
