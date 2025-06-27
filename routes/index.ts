@@ -3,6 +3,6 @@ import { textToSpeech } from '../controllers';
 
 const router = express.Router();
 
-router.get('/text-to-speech', textToSpeech)
+router.post('/text-to-speech', textToSpeech)
 export default router;
   
