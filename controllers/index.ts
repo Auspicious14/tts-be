@@ -43,15 +43,14 @@ export const textToSpeechWithEdge = expressAsyncHandler(
       volume: "0%",
     });
 
-    const audio = tts.toRaw();
-    console.log({ audio });
+    const audio = await tts.toRaw();
     res.set({
       "Content-Type": "audio/mpeg",
       "Content-Disposition": 'inline; filename="tts.mp3"',
-      "Content-Length": audio.length,
+      "Content-Length": Buffer.byteLength(audio, "base64"),
     });
-    const buffer = Buffer.from(audio);
-    res.send(buffer);
+    const buffer = Buffer.from(audio, "base64");
+    res.end(buffer);
   }
 );
 
