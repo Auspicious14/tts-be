@@ -22,11 +22,12 @@ export const textToSpeech = expressAsyncHandler(async (req: Request, res: Respon
 
 
 export const textToSpeechWithEdge = expressAsyncHandler(async (req: Request, res: Response) => {
-  const text = req.query.text as string;
+  const {text, voice = 'en-US-AriaNeural'} = req.query
+
   if (!text) return res.status(400).send('Text is required');
 
   const tts = new EdgeTTS();
-  await tts.synthesize(text, 'en-US-AriaNeural');
+  await tts.synthesize(text, voice);
 
   const buffer = Buffer.from(await tts.toRaw());
 
