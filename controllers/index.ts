@@ -27,7 +27,7 @@ export const textToSpeechWithEdge = expressAsyncHandler(async (req: Request, res
   if (!text) return res.status(400).send('Text is required');
 
   const tts = new EdgeTTS();
-  await tts.synthesize(text, voice);
+  await tts.synthesize(text as string, voice as string);
 
   const buffer = Buffer.from(await tts.toRaw());
 
@@ -36,7 +36,7 @@ export const textToSpeechWithEdge = expressAsyncHandler(async (req: Request, res
     'Content-Disposition': 'inline; filename="tts.mp3"',
   });
 
-  res.send(Buffer.from(audio.streamBuffer));
+  res.send(buffer);
 });
 
 
