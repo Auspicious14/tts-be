@@ -1,4 +1,4 @@
-const gttsFactory = require('better-node-gtts');
+const gttsFactory = require('node-gtts');
 const gtts = gttsFactory('en');
 import expressAsyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
