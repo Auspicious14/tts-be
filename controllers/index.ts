@@ -1,47 +1,80 @@
-const gttsFactory = require('node-gtts');
-const gtts = gttsFactory('en');
-import expressAsyncHandler from 'express-async-handler';
-import { Request, Response } from 'express';
-import { EdgeTTS } from '@andresaya/edge-tts';
+const gttsFactory = require("node-gtts");
+const gtts = gttsFactory("en");
+import expressAsyncHandler from "express-async-handler";
+import { Request, Response } from "express";
+import { EdgeTTS } from "@andresaya/edge-tts";
+import { voiceConfig } from "../utils/voice";
 
-export const textToSpeech = expressAsyncHandler(async (req: Request, res: Response) => {
-  const { text} = req.query;
-  if (!text) {
-    res.status(400).json({ success: false, message: 'Text is required' });
-    return;
+export const textToSpeech = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const { text } = req.query;
+    if (!text) {
+      res.status(400).json({ success: false, message: "Text is required" });
+      return;
+    }
+
+    res.set({
+      "Content-Type": "audio/mpeg",
+      "Content-Disposition": 'inline; filename="tts.mp3"',
+    });
+    gtts.stream(text).pipe(res);
   }
- 
-  res.set({
-    'Content-Type': 'audio/mpeg',
-    'Content-Disposition': 'inline; filename="tts.mp3"'
-  });
-  gtts.stream(text).pipe(res);
-});
+);
 
+export const textToSpeechWithEdge = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const query = req.query;
 
+    const { text, voice = "en-NG-AbeoNeural" } = query;
 
+    if (!text || typeof text !== "string") {
+      res.status(400).send({ success: false, message: "Text is required" });
+      return;
+    }
+    if (!voice || typeof voice !== "string") {
+      res.status(400).send({ success: false, message: "Voice is required" });
+      return;
+    }
 
-export const textToSpeechWithEdge = expressAsyncHandler(async (req: Request, res: Response) => {
-  const {text, voice = 'en-US-AriaNeural'} = req.query
+    const tts = new EdgeTTS();
+    await tts.synthesize(text as string, voice as string, {
+      rate: "0%",
+      pitch: "0Hz",
+      volume: "0%",
+    });
 
-  if (!text)  res.status(400).send('Text is required');
+    const audio = tts.toRaw();
+    console.log({ audio });
+    res.set({
+      "Content-Type": "audio/mpeg",
+      "Content-Disposition": 'inline; filename="tts.mp3"',
+      "Content-Length": audio.length,
+    });
+    const buffer = Buffer.from(audio);
+    res.send(buffer);
+  }
+);
 
-  const tts = new EdgeTTS();
-  await tts.synthesize(text as string, voice as string);
+export const getAvailableVoicesInEdge = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const tts = new EdgeTTS();
+    const voices = await tts.getVoices();
 
-  const buffer = Buffer.from(await tts.toRaw());
+    const filteredVoices = voices.filter((voice) =>
+      voiceConfig.map((config) => config.voice).includes(voice.ShortName)
+    );
 
-  res.set({
-    'Content-Type': 'audio/mpeg',
-    'Content-Disposition': 'inline; filename="tts.mp3"',
-  });
+    const formattedVoices = filteredVoices.map((voice) => {
+      const config = voiceConfig.find((c) => c.voice === voice.ShortName);
+      return {
+        name: config?.name,
+        voice: voice.ShortName,
+        gender: config?.gender,
+        country: config?.country,
+        // ...voice,
+      };
+    });
 
-  res.send(buffer);
-});
-
-
-export const getAvailableVoicesInEdge = expressAsyncHandler(async (req: Request, res: Response) => {
-  const tts = new EdgeTTS()
-  const voices = await tts.getVoices()
-  res.status(201).json({success: true, data: voices})
-})
+    res.status(201).json({ success: true, data: formattedVoices });
+  }
+);
