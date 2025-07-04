@@ -18,12 +18,6 @@ export const voiceConfig = [
     country: "Kenya",
   },
   {
-    name: "Hamed",
-    voice: "ar-SA-HamedNeural",
-    gender: "male",
-    country: "Saudi Arabia",
-  },
-  {
     name: "Denise",
     voice: "fr-FR-DeniseNeural",
     gender: "female",
@@ -48,15 +42,51 @@ export const voiceConfig = [
     country: "Nigeria",
   },
   {
-    name: "Zariyah",
-    voice: "ar-SA-ZariyahNeural",
-    gender: "female",
-    country: "Saudi Arabia",
-  },
-  {
     name: "Henri",
     voice: "fr-FR-HenriNeural",
     gender: "male",
     country: "France",
+  },
+  {
+    name: "Clara",
+    voice: "pt-BR-ClaraNatural",
+    gender: "female",
+    country: "Brazil",
+  },
+  {
+    name: "Miguel",
+    voice: "es-ES-MiguelNeural",
+    gender: "male",
+    country: "Spain",
+  },
+  {
+    name: "Xiaomei",
+    voice: "zh-CN-XiaomeiNeural",
+    gender: "female",
+    country: "China",
+  },
+  {
+    name: "Yuki",
+    voice: "ja-JP-YukiNeural",
+    gender: "female",
+    country: "Japan",
+  },
+  {
+    name: "Klaus",
+    voice: "de-DE-KlausNeural",
+    gender: "male",
+    country: "Germany",
+  },
+  {
+    name: "Pietro",
+    voice: "it-IT-PietroNeural",
+    gender: "male",
+    country: "Italy",
+  },
+  {
+    name: "Sofie",
+    voice: "nl-NL-SofieNeural",
+    gender: "female",
+    country: "Netherlands",
   },
 ];
