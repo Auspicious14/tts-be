@@ -95,7 +95,6 @@ export const getAvailableVoicesInEdge = expressAsyncHandler(
     const filteredVoices = voices.filter((voice) =>
       voiceConfig.map((config) => config.voice).includes(voice.ShortName)
     );
-
     const formattedVoices = filteredVoices.map((voice) => {
       const config = voiceConfig.find((c) => c.voice === voice.ShortName);
       return {

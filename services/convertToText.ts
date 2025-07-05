@@ -1,4 +1,7 @@
 import { OpenAI } from "openai";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const openRouter = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
