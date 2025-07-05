@@ -6,6 +6,7 @@ import { EdgeTTS } from "@andresaya/edge-tts";
 import { voiceConfig } from "../utils/voice";
 import { convertImageToTextWithAI } from "../services/convertToText";
 import { mapFiles } from "../middlewares/file";
+import { groupVoicesByCountry } from "../utils/groupVoice";
 
 export const textToSpeech = expressAsyncHandler(
   async (req: Request, res: Response) => {
@@ -92,19 +93,7 @@ export const getAvailableVoicesInEdge = expressAsyncHandler(
     const tts = new EdgeTTS();
     const voices = await tts.getVoices();
 
-    const filteredVoices = voices.filter((voice) =>
-      voiceConfig.map((config) => config.voice).includes(voice.ShortName)
-    );
-    const formattedVoices = filteredVoices.map((voice) => {
-      const config = voiceConfig.find((c) => c.voice === voice.ShortName);
-      return {
-        name: config?.name,
-        voice: voice.ShortName,
-        gender: config?.gender,
-        country: config?.country,
-        // ...voice,
-      };
-    });
+    const formattedVoices = groupVoicesByCountry(voices);
 
     res.status(201).json({ success: true, data: formattedVoices });
   }
