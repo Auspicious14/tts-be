@@ -1,5 +1,6 @@
 import { OpenAI } from "openai";
 import dotenv from "dotenv";
+import { cleanText } from "../utils/cleanText";
 
 dotenv.config();
 
@@ -15,10 +16,9 @@ interface IRefineOptions {
 export const convertImageToTextWithAI = async ({
   image,
 }: IRefineOptions): Promise<string> => {
-  const systemPrompt = `You are a helpful assistant that converts images to detailed textual descriptions. Please describe the image content clearly and comprehensively.`;
+  const systemPrompt = `You are an OCR expert. Extract and return only the exact visible text from the uploaded image. Do not describe the image, interpret it, or include any additional comments. Return only the text exactly as it appears.`;
   const messages = [
     { role: "system", content: systemPrompt },
-    { role: "user", content: prompt },
     {
       type: "image_url",
       image_url: {
@@ -38,5 +38,7 @@ export const convertImageToTextWithAI = async ({
   if (!completion.choices[0]?.message?.content) {
     throw new Error("Failed to get image description from AI");
   }
-  return completion.choices[0].message.content;
+  const rawText = completion.choices[0].message.content;
+  console.log({ rawText });
+  return cleanText(rawText);
 };

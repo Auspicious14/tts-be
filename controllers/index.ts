@@ -7,6 +7,7 @@ import { voiceConfig } from "../utils/voice";
 import { convertImageToTextWithAI } from "../services/convertToText";
 import { mapFiles } from "../middlewares/file";
 import { groupVoicesByCountry } from "../utils/groupVoice";
+import { extractTextFromImage } from "../services/extractText";
 
 export const textToSpeech = expressAsyncHandler(
   async (req: Request, res: Response) => {
@@ -59,7 +60,7 @@ export const textToSpeechWithEdge = expressAsyncHandler(
 
 export const imageToSpeech = expressAsyncHandler(
   async (req: Request, res: Response) => {
-    const { image, voice = "en-US-JennyNeural" } = req.body;
+    const { image } = req.body;
     if (!image) {
       res.status(400).json({ success: false, message: "Image is required" });
       return;
@@ -69,10 +70,20 @@ export const imageToSpeech = expressAsyncHandler(
       res.status(400).json({ success: false, message: "Image is required" });
       return;
     }
-    const description = await convertImageToTextWithAI({ image: files[0].uri });
-    // Step 2: Synthesize speech from text
+    const { text, lang } = await extractTextFromImage(files[0].uri);
+    const langToVoice = {
+      eng: "en-US-JennyNeural",
+      fra: "fr-FR-DeniseNeural",
+      ara: "ar-SA-ZariyahNeural",
+      deu: "de-DE-KatjaNeural",
+    };
+
+    const ttsVoice =
+      lang in langToVoice
+        ? langToVoice[lang as keyof typeof langToVoice]
+        : "en-US-JennyNeural";
     const tts = new EdgeTTS();
-    await tts.synthesize(description, voice, {
+    await tts.synthesize(text, ttsVoice, {
       rate: "0%",
       pitch: "0Hz",
       volume: "0%",
