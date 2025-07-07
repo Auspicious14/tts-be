@@ -1,6 +1,5 @@
 import express from 'express';
-import { textToSpeech, textToSpeechWithEdge, getAvailableVoicesInEdge } from '../controllers';
-import { imageToSpeech } from '../controllers';
+import { textToSpeech, textToSpeechWithEdge, getAvailableVoicesInEdge, imageToSpeech } from '../controllers/index';
 
 const router = express.Router();
 
