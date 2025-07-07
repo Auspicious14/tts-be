@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Auspicious14",
+  "type": "module",
   "license": "MIT",
   "dependencies": {
     "@andresaya/edge-tts": "^1.2.4",
