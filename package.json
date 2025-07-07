@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "author": "Auspicious14",
-  "type": "module",
+  "type": "commonjs",
   "license": "MIT",
   "dependencies": {
     "@andresaya/edge-tts": "^1.2.4",

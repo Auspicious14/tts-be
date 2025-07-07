@@ -1,5 +1,5 @@
 //@ts-ignore
-const { default: gttsFactory } = await import("node-gtts");
+const gttsFactory = require("node-gtts");
 const gtts = gttsFactory("en");
 import expressAsyncHandler from "express-async-handler";
 import { Request, Response } from "express";
