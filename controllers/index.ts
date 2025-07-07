@@ -1,11 +1,9 @@
 //@ts-ignore
-const {default: gttsFactory} = (await import("node-gtts"));
+const { default: gttsFactory } = await import("node-gtts");
 const gtts = gttsFactory("en");
 import expressAsyncHandler from "express-async-handler";
 import { Request, Response } from "express";
 import { EdgeTTS } from "@andresaya/edge-tts";
-import { voiceConfig } from "../utils/voice";
-import { convertImageToTextWithAI } from "../services/convertToText";
 import { mapFiles } from "../middlewares/file";
 import { groupVoicesByCountry } from "../utils/groupVoice";
 import { extractTextFromImage } from "../services/extractText";

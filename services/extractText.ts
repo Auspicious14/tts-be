@@ -1,5 +1,5 @@
 import Tesseract from "tesseract.js";
-import franc from 'franc'
+import { franc } from "franc";
 
 export const extractTextFromImage = async (
   imagePath: string
@@ -10,9 +10,7 @@ export const extractTextFromImage = async (
 
   const rawText = data.text.trim();
 
-  // Step 2: Detect language from raw OCR text
-  const langCode = franc.franc(rawText); // ISO 639-3 (e.g., 'eng', 'fra')
-
+  const langCode = franc(rawText);
   return {
     text: rawText,
     lang: langCode,
