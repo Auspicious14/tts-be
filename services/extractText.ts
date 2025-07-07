@@ -1,5 +1,5 @@
 import Tesseract from "tesseract.js";
-const franc = require("franc");
+const franc = await import('franc').then(m => m.default);
 
 export const extractTextFromImage = async (
   imagePath: string
