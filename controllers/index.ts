@@ -6,7 +6,6 @@ import { Request, Response } from "express";
 import { EdgeTTS } from "@andresaya/edge-tts";
 import { mapFiles } from "../middlewares/file";
 import { groupVoicesByCountry } from "../utils/groupVoice";
-import { extractTextFromImage } from "../services/extractText";
 
 export const textToSpeech = expressAsyncHandler(
   async (req: Request, res: Response) => {
@@ -64,12 +63,29 @@ export const imageToSpeech = expressAsyncHandler(
       res.status(400).json({ success: false, message: "Image is required" });
       return;
     }
+
     const files = await mapFiles([image]);
     if (!files[0]) {
       res.status(400).json({ success: false, message: "Image is required" });
       return;
     }
-    const { text, lang } = await extractTextFromImage(files[0].uri);
+
+    const ocrResponse = await fetch("http://localhost:3001/extract-text", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ imageBase64: image.split(",")[1] }),
+    });
+
+    if (!ocrResponse.ok) {
+      throw new Error(
+        "Failed to extract text from image using OCR microservice"
+      );
+    }
+
+    const { text, lang } = await ocrResponse.json();
+    console.log({ text, lang });
     const langToVoice = {
       eng: "en-US-JennyNeural",
       fra: "fr-FR-DeniseNeural",
