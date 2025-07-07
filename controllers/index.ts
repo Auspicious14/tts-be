@@ -6,6 +6,10 @@ import { Request, Response } from "express";
 import { EdgeTTS } from "@andresaya/edge-tts";
 import { mapFiles } from "../middlewares/file";
 import { groupVoicesByCountry } from "../utils/groupVoice";
+import dotenv from "dotenv";
+dotenv.config();
+
+const microserviceUrl = process.env.OCR_MICROSERVICE_URL || "";
 
 export const textToSpeech = expressAsyncHandler(
   async (req: Request, res: Response) => {
@@ -70,7 +74,7 @@ export const imageToSpeech = expressAsyncHandler(
       return;
     }
 
-    const ocrResponse = await fetch("http://localhost:3001/extract-text", {
+    const ocrResponse = await fetch(`${microserviceUrl}/extract-text`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
