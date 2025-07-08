@@ -73,13 +73,16 @@ export const imageToSpeech = expressAsyncHandler(
       res.status(400).json({ success: false, message: "Image is required" });
       return;
     }
-
+    const refinedImage = files[0]?.uri?.replace(
+      "/upload",
+      "/upload/w_800,e_grayscale,e_contrast:40,q_auto,f_auto/"
+    );
     const ocrResponse = await fetch(`${microserviceUrl}/extract-text`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ imageBase64: image.split(",")[1] }),
+      body: JSON.stringify({ image: refinedImage }),
     });
 
     if (!ocrResponse.ok) {
